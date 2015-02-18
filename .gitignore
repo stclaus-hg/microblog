@@ -56,3 +56,4 @@ target/
 # Flask
 tmp/
 app.db
+test.db
