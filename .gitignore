@@ -8,7 +8,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-flask/
 build/
 develop-eggs/
 dist/
@@ -53,3 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Flask
+tmp/
+app.db
