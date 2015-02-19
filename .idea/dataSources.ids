@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="SQLite -" uuid="0ed773e7-5041-44fb-a162-8cec6aedd12e">
+    <database-info product="SQLite" version="3.7.6.3" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+    <table name="followers" schema="" catalog="" type="TABLE">
+      <column name="follower_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="followed_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+    </table>
+    <table name="migrate_version" schema="" catalog="" type="TABLE">
+      <column name="repository_id" sqlType="VARCHAR(250)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="repository_path" sqlType="TEXT" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="version" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="repository_id"/>
+    </table>
+    <table name="post" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="body" sqlType="VARCHAR(140)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="timestamp" sqlType="DATETIME" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="user" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="nickname" sqlType="VARCHAR(64)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR(120)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="role" sqlType="SMALLINT" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="about_me" sqlType="VARCHAR(140)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="last_seen" sqlType="DATETIME" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <index name="ix_user_email" unique="true" columns="email"/>
+      <index name="ix_user_nickname" unique="true" columns="nickname"/>
+    </table>
+  </data-source>
+</component>

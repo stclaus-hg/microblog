@@ -1,34 +1,36 @@
 from datetime import datetime
+import config
 
 __author__ = 'stclaus'
 
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
-from app.forms import LoginForm, EditForm
+from app.forms import LoginForm, EditForm, PostForm
 from app import app, db, lm, oid
-from models import User, ROLE_USER, ROLE_ADMIN
+from models import User, ROLE_USER, Post
+
 
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
-@app.route("/")
-@app.route("/index")
+
+@app.route("/", methods=['GET', 'POST'])
+@app.route("/index", methods=['GET', 'POST'])
+@app.route("/index/<int:page>", methods=['GET', 'POST'])
 @login_required
-def index():
-    user =g.user
-    posts = [
-        {
-            'author': { 'nickname': 'John' },
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', user=user, title='Hello', posts=posts)
+def index(page=1):
+    user = g.user
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=g.user, timestamp=datetime.utcnow())
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('index'))
+    posts = g.user.followed_posts().paginate(page, config.POSTS_PER_PAGE, False)
+    return render_template('index.html', user=user, title='Hello', posts=posts, form=form)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 @oid.loginhandler
@@ -84,17 +86,16 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
 @login_required
-def user(nickname):
+def user(nickname, page=1):
     user = User.query.filter_by(nickname=nickname).first()
     if user is None:
         flash('User ' + nickname + ' not found')
         return redirect(url_for('index'))
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
+    posts = user.posts.paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('user.html', user=user, posts=posts)
 
 @app.route('/edit', methods=['GET', 'POST'])

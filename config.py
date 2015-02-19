@@ -22,3 +22,6 @@ MAIL_USERNAME = None
 MAIL_PASSWORD = None
 
 ADMINS = ['voitenko@qarea.com']
+
+
+POSTS_PER_PAGE = 2

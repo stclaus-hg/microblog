@@ -4,7 +4,7 @@ __author__ = 'stclaus'
 
 from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField, TextAreaField
-from wtforms.validators import Required, DataRequired, Length
+from wtforms.validators import DataRequired, Length
 
 
 class LoginForm(Form):
@@ -26,7 +26,11 @@ class EditForm(Form):
         if self.nickname.data == self.original_nickname:
             return True
         user = User.query.filter_by(nickname=self.nickname.data).first()
-        if user != None:
+        if user is not None:
             self.nickname.errors.append('This nickname is already in use. Please choose another one.')
             return False
         return True
+
+
+class PostForm(Form):
+    post = TextAreaField('post', validators=[DataRequired()])
