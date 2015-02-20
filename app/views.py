@@ -1,4 +1,5 @@
 from datetime import datetime
+from app.emails import follower_notification
 import config
 
 __author__ = 'stclaus'
@@ -45,6 +46,7 @@ def login():
 
     return render_template("login.html", form=form, title='Sign In', providers=app.config['OPENID_PROVIDERS'])
 
+
 @app.before_request
 def before_request():
     g.user = current_user
@@ -53,6 +55,7 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
         g.search_form = SearchForm()
+
 
 @oid.after_login
 def after_login(resp):
@@ -81,6 +84,7 @@ def after_login(resp):
     login_user(user, remember=remember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -97,6 +101,7 @@ def user(nickname, page=1):
         return redirect(url_for('index'))
     posts = user.posts.paginate(page, config.POSTS_PER_PAGE, False)
     return render_template('user.html', user=user, posts=posts)
+
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
@@ -148,6 +153,7 @@ def follow(nickname):
     db.session.add(u)
     db.session.commit()
 
+    follower_notification(user, g.user)
     flash('You are now following %s' % nickname)
     return redirect(url_for('user', nickname=nickname))
 
