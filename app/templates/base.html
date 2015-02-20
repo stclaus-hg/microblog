@@ -8,6 +8,11 @@
     <div>Microblog:
         <a href="/index">Home</a>
         {% if g.user.is_authenticated() %}
+            <form style="display: inline" action="{{ url_for('search') }}" method="post">
+                {{ g.search_form.hidden_tag() }}
+                {{ g.search_form.query(size=20) }}
+                <input type="submit" value="Search">
+            </form>
             | <a href="{{ url_for('user', nickname=g.user.nickname) }}">Your profile</a>
             | <a href="{{ url_for('logout') }}">Logout</a>
         {% endif %}

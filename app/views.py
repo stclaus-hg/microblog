@@ -6,7 +6,7 @@ __author__ = 'stclaus'
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
-from app.forms import LoginForm, EditForm, PostForm
+from app.forms import LoginForm, EditForm, PostForm, SearchForm
 from app import app, db, lm, oid
 from models import User, ROLE_USER, Post
 
@@ -52,7 +52,7 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
-
+        g.search_form = SearchForm()
 
 @oid.after_login
 def after_login(resp):
@@ -175,3 +175,19 @@ def unfollow(nickname):
 
     flash('You have stopen following %s' % nickname)
     return redirect(url_for('user', nickname=nickname))
+
+
+@app.route('/search', methods=['POST'])
+@login_required
+def search():
+    if g.search_form.validate_on_submit():
+        return redirect(url_for('search_result', query=g.search_form.query.data))
+    return redirect(url_for('index'))
+
+
+@app.route('/search_result/<query>')
+@login_required
+def search_result(query):
+    result = Post.query.whoosh_search(query, config.MAX_SEARCH_RESULT).paginate(1, config.MAX_SEARCH_RESULT, False)
+    print query, result
+    return render_template('search_result.html', posts=result, query=query)

@@ -25,3 +25,6 @@ ADMINS = ['voitenko@qarea.com']
 
 
 POSTS_PER_PAGE = 2
+
+WHOOSH_BASE = os.path.join(basedir, 'search.db')
+MAX_SEARCH_RESULT = 50
