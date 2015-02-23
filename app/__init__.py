@@ -1,4 +1,5 @@
 from app.momentjs import momentjs
+from flask.ext.babel import Babel
 
 __author__ = 'stclaus'
 
@@ -24,6 +25,8 @@ oid = OpenID(app, os.path.join(basedir, 'tmp'))
 mail = Mail(app)
 
 app.jinja_env.globals['momentjs'] = momentjs
+
+babel = Babel(app)
 
 from app import views, models
 

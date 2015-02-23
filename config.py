@@ -1,3 +1,4 @@
+# coding=utf-8
 __author__ = 'stclaus'
 import os
 
@@ -28,3 +29,8 @@ POSTS_PER_PAGE = 2
 
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
 MAX_SEARCH_RESULT = 50
+
+LANGUAGES = {
+    'en': 'English',
+    'ru': 'Русский'
+}

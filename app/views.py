@@ -1,6 +1,7 @@
 from datetime import datetime
 from app.emails import follower_notification
 import config
+from flask.ext.babel import gettext
 
 __author__ = 'stclaus'
 
@@ -8,7 +9,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 
 from app.forms import LoginForm, EditForm, PostForm, SearchForm
-from app import app, db, lm, oid
+from app import app, db, lm, oid, babel
 from models import User, ROLE_USER, Post
 
 
@@ -60,7 +61,7 @@ def before_request():
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
-        flash('Invalid login. Please try again.')
+        flash(gettext('Invalid login. Please try again.'))
         return redirect(url_for('login'))
     user = User.query.filter_by(email=resp.email).first()
 
@@ -197,3 +198,8 @@ def search_result(query):
     result = Post.query.whoosh_search(query, config.MAX_SEARCH_RESULT).paginate(1, config.MAX_SEARCH_RESULT, False)
     print query, result
     return render_template('search_result.html', posts=result, query=query)
+
+
+@babel.localeselector
+def get_locale():
+    return 'ru'  #request.accept_languages.best_match(config.LANGUAGES.keys())
