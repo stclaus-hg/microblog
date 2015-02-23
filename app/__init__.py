@@ -1,3 +1,5 @@
+from app.momentjs import momentjs
+
 __author__ = 'stclaus'
 
 import os
@@ -20,6 +22,8 @@ lm.login_view = 'login'
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
 mail = Mail(app)
+
+app.jinja_env.globals['momentjs'] = momentjs
 
 from app import views, models
 
